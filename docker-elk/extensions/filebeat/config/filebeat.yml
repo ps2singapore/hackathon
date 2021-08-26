@@ -1,0 +1,29 @@
+filebeat.inputs:
+- type: log
+  enabled: true
+  paths:
+    - /var/lib/docker/containers/a8bd4314871da6202bb709b342895ecb728f58360794cfdbf110b9968845c60b/*.log
+    - /var/log/*.log
+    - /var/lib/docker/containers/ffd4dd242717e30d3835797f053e0f4a77e236dc9c10726e3d42a97bb815c8ec/*.log 
+    - /var/lib/docker/containers/340bd96060ad853a013e62e7ad75bc4b13bee27490efe6dd71530b463abb5020/*.log
+
+filebeat.config:
+  modules:
+    path: ${path.config}/modules.d/*.yml
+    reload.enabled: false
+
+filebeat.autodiscover:
+  providers:
+    - type: docker
+      hints.enabled: true
+
+processors:
+- add_cloud_metadata: ~
+
+output.elasticsearch:
+  hosts: ['http://elasticsearch:9200']
+  username: elastic
+  password: changeme
+
+http.enabled: true
+http.host: 0.0.0.0
